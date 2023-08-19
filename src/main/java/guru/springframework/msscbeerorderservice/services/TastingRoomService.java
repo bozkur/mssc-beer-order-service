@@ -17,9 +17,9 @@ import static guru.springframework.msscbeerorderservice.bootstrap.BeerOrderBootS
 @Service
 public class TastingRoomService {
 
-    public static final String BEER1_UPC = "018200000164";
-    public static final String BEER2_UPC = "087600100217";
-    public static final String BEER3_UPC = "083820123937";
+    public static final String BEER1_UPC = "0631234200036";
+    public static final String BEER2_UPC = "0631234300019";
+    public static final String BEER3_UPC = "0083783375213";
 
     private final CustomerRepository customerRepository;
     private final BeerOrderService beerOrderService;

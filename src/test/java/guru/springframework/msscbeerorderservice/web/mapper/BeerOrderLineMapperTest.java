@@ -1,14 +1,16 @@
 package guru.springframework.msscbeerorderservice.web.mapper;
 
 import guru.springframework.msscbeerorderservice.domain.BeerOrderLine;
+import guru.springframework.msscbeerorderservice.services.beer.BeerServiceController;
 import guru.springframework.msscbeerorderservice.web.model.BeerOrderLineDto;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -17,8 +19,7 @@ import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
-@ExtendWith({SpringExtension.class})
-@ContextConfiguration(classes = { BeerOrderLineMapperImpl.class, DateMapper.class })
+@SpringBootTest
 class BeerOrderLineMapperTest {
 
     @Autowired
@@ -26,6 +27,13 @@ class BeerOrderLineMapperTest {
 
     @Autowired
     private DateMapper dateMapper;
+
+    @Value("${sfg.brewery.beer-service-host}")
+    private String beerServiceHost;
+    @BeforeEach
+    void setUp() {
+        Assumptions.assumeTrue(new BeerServiceController().beerServiceListening(beerServiceHost));
+    }
 
     @Test
     @DisplayName("Convert dto to domain object")
@@ -54,6 +62,7 @@ class BeerOrderLineMapperTest {
     void shouldConvertDomainToDto() {
         BeerOrderLine domain = new BeerOrderLine();
         domain.setId(UUID.randomUUID());
+        domain.setUpc("1234");
         domain.setBeerId(UUID.randomUUID());
         domain.setVersion(1L);
         domain.setCreatedDate(Timestamp.from(Instant.now()));

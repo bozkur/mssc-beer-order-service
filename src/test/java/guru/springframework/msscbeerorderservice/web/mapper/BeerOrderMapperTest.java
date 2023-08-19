@@ -3,14 +3,16 @@ package guru.springframework.msscbeerorderservice.web.mapper;
 import guru.springframework.msscbeerorderservice.domain.BeerOrder;
 import guru.springframework.msscbeerorderservice.domain.BeerOrderLine;
 import guru.springframework.msscbeerorderservice.domain.OrderStatus;
+import guru.springframework.msscbeerorderservice.services.beer.BeerServiceController;
 import guru.springframework.msscbeerorderservice.web.model.BeerOrderDto;
 import guru.springframework.msscbeerorderservice.web.model.BeerOrderLineDto;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -21,8 +23,7 @@ import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
-@ExtendWith({SpringExtension.class})
-@ContextConfiguration(classes = { BeerOrderMapperImpl.class, BeerOrderLineMapperImpl.class, DateMapper.class })
+@SpringBootTest
 class BeerOrderMapperTest {
 
     @Autowired
@@ -30,6 +31,13 @@ class BeerOrderMapperTest {
 
     @Autowired
     private DateMapper dateMapper;
+
+    @Value("${sfg.brewery.beer-service-host}")
+    private String beerServiceHost;
+    @BeforeEach
+    void setUp() {
+        Assumptions.assumeTrue(new BeerServiceController().beerServiceListening(beerServiceHost));
+    }
 
     @Test
     void shouldConvertDomainToDto() {
@@ -61,6 +69,7 @@ class BeerOrderMapperTest {
     private BeerOrderLine createDomainLine() {
         return BeerOrderLine.builder()
                 .beerId(UUID.randomUUID())
+                .upc("12345")
                 .build();
     }
 

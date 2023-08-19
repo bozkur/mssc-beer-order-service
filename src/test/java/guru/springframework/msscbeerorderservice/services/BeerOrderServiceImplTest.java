@@ -5,7 +5,7 @@ import guru.springframework.msscbeerorderservice.domain.Customer;
 import guru.springframework.msscbeerorderservice.domain.OrderStatus;
 import guru.springframework.msscbeerorderservice.repositories.BeerOrderRepository;
 import guru.springframework.msscbeerorderservice.repositories.CustomerRepository;
-import guru.springframework.msscbeerorderservice.web.mapper.*;
+import guru.springframework.msscbeerorderservice.web.mapper.BeerOrderMapper;
 import guru.springframework.msscbeerorderservice.web.model.BeerOrderDto;
 import guru.springframework.msscbeerorderservice.web.model.BeerOrderLineDto;
 import guru.springframework.msscbeerorderservice.web.model.BeerOrderPagedList;
@@ -13,17 +13,15 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,8 +32,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {BeerOrderMapperImpl.class, BeerOrderLineMapperImpl.class, DateMapper.class})
+@SpringBootTest
 class BeerOrderServiceImplTest {
 
     @Mock
@@ -71,7 +68,6 @@ class BeerOrderServiceImplTest {
 
         BeerOrderPagedList pagedOrderList = beerOrderService.listOrders(customer.getId(), pageable);
 
-        int totalPages = pagedOrderList.getTotalPages();
         List<BeerOrderDto> orders = pagedOrderList.getContent();
 
         assertThat(orders.size(), Matchers.equalTo(2));
@@ -88,7 +84,7 @@ class BeerOrderServiceImplTest {
     void placeOrders() {
         BeerOrderDto beerOrderDto = createBeerOrder();
 
-        BeerOrderDto savedBeerDto = beerOrderService.placeOrders(customer.getId(), beerOrderDto);
+        beerOrderService.placeOrders(customer.getId(), beerOrderDto);
 
         verify(repository).saveAndFlush(ArgumentMatchers.any());
     }
