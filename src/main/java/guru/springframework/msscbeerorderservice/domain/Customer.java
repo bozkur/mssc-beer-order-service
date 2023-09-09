@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.sql.Timestamp;
 import java.util.Set;
@@ -16,7 +18,8 @@ public class Customer extends BaseEntity {
     private String customerName;
 
 
-    @Column(length = 36, columnDefinition = "varchar")
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    @Column(length = 36, columnDefinition = "varchar(36)")
     private UUID apiKey;
     @OneToMany(mappedBy = "customer")
     private Set<BeerOrder> beerOrders;
