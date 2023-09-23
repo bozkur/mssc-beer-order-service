@@ -11,4 +11,12 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>mssc-beer-order-service</name>
     <description>mssc-beer-order-service</description>
+
+    <repositories>
+        <repository>
+            <id>github</id>
+            <name>GitHub OWNER Apache Maven Packages</name>
+            <url>https://raw.githubusercontent.com/bozkur/mssc-brewery-bom/master/target/mvn-artifact</url>
+        </repository>
+    </repositories>
 </project>
