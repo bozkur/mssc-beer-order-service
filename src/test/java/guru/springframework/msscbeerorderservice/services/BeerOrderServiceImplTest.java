@@ -2,7 +2,7 @@ package guru.springframework.msscbeerorderservice.services;
 
 import guru.springframework.msscbeerorderservice.domain.BeerOrder;
 import guru.springframework.msscbeerorderservice.domain.Customer;
-import guru.springframework.msscbeerorderservice.domain.OrderStatus;
+import guru.springframework.msscbeerorderservice.domain.BeerOrderStatus;
 import guru.springframework.msscbeerorderservice.repositories.BeerOrderRepository;
 import guru.springframework.msscbeerorderservice.repositories.CustomerRepository;
 import guru.springframework.msscbeerorderservice.web.mapper.BeerOrderMapper;
@@ -76,7 +76,7 @@ class BeerOrderServiceImplTest {
     }
 
     private BeerOrder createOrder(Customer customer) {
-        return BeerOrder.builder().customer(customer).orderStatus(OrderStatus.NEW).id(UUID.randomUUID()).build();
+        return BeerOrder.builder().customer(customer).orderStatus(BeerOrderStatus.NEW).id(UUID.randomUUID()).build();
     }
 
     @Test
@@ -125,6 +125,6 @@ class BeerOrderServiceImplTest {
 
         ArgumentCaptor<BeerOrder> captor = ArgumentCaptor.forClass(BeerOrder.class);
         verify(repository).save(captor.capture());
-        assertThat(captor.getValue().getOrderStatus(), Matchers.equalTo(OrderStatus.PICKED_UP));
+        assertThat(captor.getValue().getOrderStatus(), Matchers.equalTo(BeerOrderStatus.PICKED_UP));
     }
 }

@@ -29,11 +29,11 @@ public class BeerOrder extends BaseEntity {
     @Fetch(FetchMode.JOIN)
     private List<BeerOrderLine> beerOrderLines;
 
-    private OrderStatus orderStatus =OrderStatus.NEW;
+    private BeerOrderStatus orderStatus = BeerOrderStatus.NEW;
     private String orderStatusCallbackUrl;
 
     @Builder
-    public BeerOrder(UUID id, Long version, Timestamp createdDate, Timestamp lastModifiedDate, String customerRef, Customer customer, List<BeerOrderLine> beerOrderLines, OrderStatus orderStatus, String orderStatusCallbackUrl) {
+    public BeerOrder(UUID id, Long version, Timestamp createdDate, Timestamp lastModifiedDate, String customerRef, Customer customer, List<BeerOrderLine> beerOrderLines, BeerOrderStatus orderStatus, String orderStatusCallbackUrl) {
         super(id, version, createdDate, lastModifiedDate);
         this.customerRef = customerRef;
         this.customer = customer;

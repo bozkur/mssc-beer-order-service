@@ -1,6 +1,6 @@
 package guru.springframework.msscbeerorderservice.web.model;
 
-import guru.springframework.msscbeerorderservice.domain.OrderStatus;
+import guru.springframework.msscbeerorderservice.domain.BeerOrderStatus;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,11 +18,11 @@ public class BeerOrderDto extends BaseItem {
     private UUID customerId;
     private String customerRef;
     private List<BeerOrderLineDto> beerOrderLines;
-    private OrderStatus orderStatus;
+    private BeerOrderStatus orderStatus;
     private String orderStatusCallbackUrl;
 
     @Builder
-    public BeerOrderDto(UUID id, Integer version, OffsetDateTime createdDate, OffsetDateTime lastModifiedDate, UUID customerId, String customerRef, List<BeerOrderLineDto> beerOrderLines, OrderStatus orderStatus, String orderStatusCallbackUrl) {
+    public BeerOrderDto(UUID id, Integer version, OffsetDateTime createdDate, OffsetDateTime lastModifiedDate, UUID customerId, String customerRef, List<BeerOrderLineDto> beerOrderLines, BeerOrderStatus orderStatus, String orderStatusCallbackUrl) {
         super(id, version, createdDate, lastModifiedDate);
         this.customerId = customerId;
         this.customerRef = customerRef;

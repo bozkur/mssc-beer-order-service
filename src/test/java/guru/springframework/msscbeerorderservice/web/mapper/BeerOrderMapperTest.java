@@ -2,7 +2,7 @@ package guru.springframework.msscbeerorderservice.web.mapper;
 
 import guru.springframework.msscbeerorderservice.domain.BeerOrder;
 import guru.springframework.msscbeerorderservice.domain.BeerOrderLine;
-import guru.springframework.msscbeerorderservice.domain.OrderStatus;
+import guru.springframework.msscbeerorderservice.domain.BeerOrderStatus;
 import guru.springframework.msscbeerorderservice.services.beer.BeerServiceController;
 import guru.springframework.msscbeerorderservice.web.model.BeerOrderDto;
 import guru.springframework.msscbeerorderservice.web.model.BeerOrderLineDto;
@@ -50,7 +50,7 @@ class BeerOrderMapperTest {
                 .version(1L)
                 .lastModifiedDate(Timestamp.from(Instant.now()))
                 .createdDate(Timestamp.from(Instant.now()))
-                .orderStatus(OrderStatus.NEW)
+                .orderStatus(BeerOrderStatus.NEW)
                 .build();
 
         BeerOrderDto dto = mapper.beerOrderToDto(order);
@@ -84,7 +84,7 @@ class BeerOrderMapperTest {
                 .lastModifiedDate(OffsetDateTime.now())
                 .createdDate(OffsetDateTime.now())
                 .version(1)
-                .orderStatus(OrderStatus.NEW)
+                .orderStatus(BeerOrderStatus.NEW)
                 .id(UUID.randomUUID())
                 .build();
 
