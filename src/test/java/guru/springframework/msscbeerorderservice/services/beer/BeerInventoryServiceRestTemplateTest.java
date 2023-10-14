@@ -1,6 +1,6 @@
 package guru.springframework.msscbeerorderservice.services.beer;
 
-import guru.springframework.msscbeerorderservice.services.beer.model.BeerDto;
+import guru.springframework.brewery.model.BeerDto;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

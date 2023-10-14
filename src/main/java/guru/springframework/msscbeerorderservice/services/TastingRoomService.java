@@ -2,8 +2,8 @@ package guru.springframework.msscbeerorderservice.services;
 
 import guru.springframework.msscbeerorderservice.domain.Customer;
 import guru.springframework.msscbeerorderservice.repositories.CustomerRepository;
-import guru.springframework.msscbeerorderservice.web.model.BeerOrderDto;
-import guru.springframework.msscbeerorderservice.web.model.BeerOrderLineDto;
+import guru.springframework.brewery.model.BeerOrderDto;
+import guru.springframework.brewery.model.BeerOrderLineDto;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

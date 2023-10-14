@@ -1,6 +1,7 @@
-package guru.springframework.msscbeerorderservice.services.beer.model;
+package guru.springframework.brewery.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class BeerDto {
     private String beerName;
     private String upc;

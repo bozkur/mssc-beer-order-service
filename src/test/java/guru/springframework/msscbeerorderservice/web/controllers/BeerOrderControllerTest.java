@@ -2,9 +2,9 @@ package guru.springframework.msscbeerorderservice.web.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import guru.springframework.msscbeerorderservice.services.BeerOrderService;
-import guru.springframework.msscbeerorderservice.web.model.BeerOrderDto;
-import guru.springframework.msscbeerorderservice.web.model.BeerOrderLineDto;
-import guru.springframework.msscbeerorderservice.web.model.BeerOrderPagedList;
+import guru.springframework.brewery.model.BeerOrderDto;
+import guru.springframework.brewery.model.BeerOrderLineDto;
+import guru.springframework.brewery.model.BeerOrderPagedList;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
