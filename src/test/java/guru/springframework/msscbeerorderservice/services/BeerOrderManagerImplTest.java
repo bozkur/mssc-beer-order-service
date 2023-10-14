@@ -40,6 +40,6 @@ class BeerOrderManagerImplTest {
         ArgumentCaptor<BeerOrder> beerOrderArgumentCaptor = ArgumentCaptor.forClass(BeerOrder.class);
         Mockito.verify(beerOrderRepository).saveAndFlush(beerOrderArgumentCaptor.capture());
         BeerOrder capturedOrder = beerOrderArgumentCaptor.getValue();
-        assertThat(capturedOrder.getOrderStatus(), Matchers.equalTo(BeerOrderStatus.NEW));
+        assertThat(capturedOrder.getOrderStatus(), Matchers.equalTo(BeerOrderStatus.VALIDATION_PENDING));
     }
 }
