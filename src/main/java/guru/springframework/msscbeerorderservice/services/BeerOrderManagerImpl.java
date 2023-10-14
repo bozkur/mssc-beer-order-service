@@ -4,6 +4,7 @@ import guru.springframework.msscbeerorderservice.domain.BeerOrder;
 import guru.springframework.msscbeerorderservice.domain.BeerOrderEvent;
 import guru.springframework.msscbeerorderservice.domain.BeerOrderStatus;
 import guru.springframework.msscbeerorderservice.repositories.BeerOrderRepository;
+import guru.springframework.msscbeerorderservice.sm.BeerOrderStateChangeInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class BeerOrderManagerImpl implements BeerOrderManager {
+
+    public static final String ORDER_ID_HEADER = "ORDER_ID";
 
     private final StateMachineFactory<BeerOrderStatus, BeerOrderEvent> smFactory;
     private final BeerOrderRepository beerOrderRepository;
@@ -36,6 +39,7 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
         sm.stop();
 
         sm.getStateMachineAccessor().doWithAllRegions(sma -> {
+            sma.addStateMachineInterceptor(new BeerOrderStateChangeInterceptor(beerOrderRepository));
             sma.resetStateMachine(new DefaultStateMachineContext<>(beerOrder.getOrderStatus(), null, null, null));
         });
 
@@ -45,7 +49,8 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
 
     private void sendBeerOrderEvent(BeerOrder order, BeerOrderEvent event) {
         StateMachine<BeerOrderStatus, BeerOrderEvent> sm = build(order);
-        Message<BeerOrderEvent> message = MessageBuilder.withPayload(event).build();
+        Message<BeerOrderEvent> message = MessageBuilder.withPayload(event).
+        setHeader(ORDER_ID_HEADER, order.getId().toString()).build();
         sm.sendEvent(message);
     }
 }
