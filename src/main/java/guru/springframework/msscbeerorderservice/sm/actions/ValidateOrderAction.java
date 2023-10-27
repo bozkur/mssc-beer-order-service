@@ -38,7 +38,7 @@ public class ValidateOrderAction implements Action<BeerOrderStatus, BeerOrderEve
             Optional<BeerOrder> foundOrder = beerOrderRepository.findById(UUID.fromString(oid));
             foundOrder.ifPresent(bo -> {
                 BeerOrderDto beerOrderDto = mapper.beerOrderToDto(bo);
-                jmsTemplate.convertAndSend(JmsConfig.VALIDATE_ORDER_QUUEUE, new ValidateBeerOrderRequest(beerOrderDto));
+                jmsTemplate.convertAndSend(JmsConfig.VALIDATE_ORDER_QUEUE, new ValidateBeerOrderRequest(beerOrderDto));
                 log.debug("Validation request is sent for order with id : {}", oid);
             });
         });

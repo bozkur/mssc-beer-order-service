@@ -13,6 +13,9 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+import java.util.UUID;
+
 /**
  * @author cevher
  */
@@ -32,6 +35,18 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
         BeerOrder saved = beerOrderRepository.save(beerOrder);
         sendBeerOrderEvent(saved, BeerOrderEvent.VALIDATE_ORDER);
         return saved;
+    }
+
+    @Override
+    public void processValidationResult(UUID orderId, boolean isValid) {
+        Optional<BeerOrder> optionalOrder = beerOrderRepository.findById(orderId);
+        optionalOrder.ifPresent(order -> {
+            if (isValid) {
+                sendBeerOrderEvent(order, BeerOrderEvent.VALIDATION_PASSED);
+            } else {
+                sendBeerOrderEvent(order, BeerOrderEvent.VALIDATION_FAILED);
+            }
+        });
     }
 
     private StateMachine<BeerOrderStatus, BeerOrderEvent> build(BeerOrder beerOrder) {

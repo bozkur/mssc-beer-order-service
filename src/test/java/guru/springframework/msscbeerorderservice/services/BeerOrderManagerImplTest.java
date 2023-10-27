@@ -4,6 +4,7 @@ import guru.springframework.msscbeerorderservice.domain.BeerOrder;
 import guru.springframework.msscbeerorderservice.domain.BeerOrderStatus;
 import guru.springframework.msscbeerorderservice.repositories.BeerOrderRepository;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
@@ -12,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,8 +34,18 @@ class BeerOrderManagerImplTest {
     @Autowired
     private BeerOrderManager orderManager;
 
+    @BeforeAll
+    static void setupBeforeClass() {
+        Socket socket = new Socket();
+        try {
+            socket.connect(new InetSocketAddress(61616));
+        } catch (IOException e) {
+           org.junit.jupiter.api.Assumptions.assumeTrue(false);
+        }
+    }
+
     @Test
-    void test() {
+    void testNewBeerOder() {
         BeerOrder order = BeerOrder.builder().id(UUID.randomUUID()).build();
         when(beerOrderRepository.save(ArgumentMatchers.any())).thenReturn(order);
         when(beerOrderRepository.findById(order.getId())).thenReturn(Optional.of(order));
