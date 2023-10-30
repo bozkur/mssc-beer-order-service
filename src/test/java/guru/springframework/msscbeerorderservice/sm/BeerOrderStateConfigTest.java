@@ -52,6 +52,15 @@ class BeerOrderStateConfigTest {
         assertThat(sm.getState().getId(), Matchers.equalTo(BeerOrderStatus.VALIDATION_EXCEPTION));
     }
 
+    @Test
+    @DisplayName("Validated -> Allocate -> Allocation Pending")
+    void shouldDoTransitionFromValidateToAllocationPending() {
+        sm.sendEvent(BeerOrderEvent.VALIDATE_ORDER);
+        sm.sendEvent(BeerOrderEvent.VALIDATION_PASSED);
+        sm.sendEvent(BeerOrderEvent.ALLOCATE_ORDER);
+        assertThat(sm.getState().getId(), Matchers.equalTo(BeerOrderStatus.ALLOCATION_PENDING));
+    }
+
     @AfterEach
     void tearDown() {
         sm.stop();

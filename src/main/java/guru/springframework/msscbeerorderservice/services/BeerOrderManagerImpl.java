@@ -43,6 +43,9 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
         optionalOrder.ifPresent(order -> {
             if (isValid) {
                 sendBeerOrderEvent(order, BeerOrderEvent.VALIDATION_PASSED);
+
+                Optional<BeerOrder> uptoDateOrder = beerOrderRepository.findById(orderId);
+                uptoDateOrder.ifPresent(ord -> sendBeerOrderEvent(ord, BeerOrderEvent.ALLOCATE_ORDER));
             } else {
                 sendBeerOrderEvent(order, BeerOrderEvent.VALIDATION_FAILED);
             }
