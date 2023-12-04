@@ -1,7 +1,9 @@
 package guru.springframework.msscbeerorderservice.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.converter.MessageType;
@@ -9,6 +11,7 @@ import org.springframework.jms.support.converter.MessageType;
 /**
  * @author cevher
  */
+@EnableJms
 @Configuration
 public class JmsConfig {
 
@@ -19,10 +22,11 @@ public class JmsConfig {
     public static final String VALIDATE_ORDER_RESULT_QUEUE = "validate-order-result";
 
     @Bean
-    public MessageConverter messageConverter() {
+    public MessageConverter messageConverter(ObjectMapper objectMapper) {
         MappingJackson2MessageConverter messageConverter = new MappingJackson2MessageConverter();
         messageConverter.setTypeIdPropertyName("_type");
         messageConverter.setTargetType(MessageType.TEXT);
+        messageConverter.setObjectMapper(objectMapper);
         return messageConverter;
     }
 }

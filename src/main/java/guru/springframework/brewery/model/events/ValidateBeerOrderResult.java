@@ -1,7 +1,9 @@
 package guru.springframework.brewery.model.events;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -11,12 +13,14 @@ import java.util.UUID;
  * @author cevher
  */
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ValidateBeerOrderResult implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 3203599521339753454L;
 
-    private final UUID orderId;
-    private final boolean isValid;
+    private UUID orderId;
+    private boolean isValid;
 }

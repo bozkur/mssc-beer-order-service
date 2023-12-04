@@ -18,12 +18,29 @@
             <artifactId>spring-statemachine-core</artifactId>
             <version>3.2.1</version>
         </dependency>
-    </dependencies>
-    <repositories>
-        <repository>
-            <id>github</id>
-            <name>GitHub OWNER Apache Maven Packages</name>
-            <url>https://raw.githubusercontent.com/bozkur/mssc-brewery-bom/master/target/mvn-artifact</url>
-        </repository>
-    </repositories>
-</project>
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <scope>test</scope>
+        </dependency>
+                 <dependency>
+                     <groupId>com.maciejwalkowiak.spring</groupId>
+                     <artifactId>wiremock-spring-boot</artifactId>
+                     <version>2.0.0</version>
+                     <scope>test</scope>
+                 </dependency>
+
+                 <dependency>
+                     <groupId>com.fasterxml.jackson.datatype</groupId>
+                     <artifactId>jackson-datatype-jsr310</artifactId>
+                     <version>2.14.1</version>
+                 </dependency>
+                      </dependencies>
+                                                 <repositories>
+                                                     <repository>
+                                                         <id>github</id>
+                                                         <name>GitHub OWNER Apache Maven Packages</name>
+                                                         <url>https://raw.githubusercontent.com/bozkur/mssc-brewery-bom/master/target/mvn-artifact</url>
+                                                     </repository>
+                                                 </repositories>
+                                             </project>

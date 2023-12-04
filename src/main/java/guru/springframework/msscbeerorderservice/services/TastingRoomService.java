@@ -1,12 +1,11 @@
 package guru.springframework.msscbeerorderservice.services;
 
-import guru.springframework.msscbeerorderservice.domain.Customer;
-import guru.springframework.msscbeerorderservice.repositories.CustomerRepository;
 import guru.springframework.brewery.model.BeerOrderDto;
 import guru.springframework.brewery.model.BeerOrderLineDto;
+import guru.springframework.msscbeerorderservice.domain.Customer;
+import guru.springframework.msscbeerorderservice.repositories.CustomerRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -32,7 +31,7 @@ public class TastingRoomService {
     }
 
     @Transactional
-    @Scheduled(fixedRate = 2000)
+ //   @Scheduled(fixedRate = 2000)
     public void placeTastingRoomOrder() {
         List<Customer> customerList = customerRepository.findAllByCustomerNameLike(TASTING_ROOM);
         if (customerList.size() == 1) {
