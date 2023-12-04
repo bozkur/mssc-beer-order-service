@@ -95,6 +95,17 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
         });
     }
 
+    @Override
+    public void pickupOrder(UUID orderId) {
+        Optional<BeerOrder> found = beerOrderRepository.findById(orderId);
+        found.ifPresent(beerOrder -> {
+            if (beerOrder.getOrderStatus() != BeerOrderStatus.ALLOCATED) {
+                throw new IllegalStateException();
+            }
+            sendBeerOrderEvent(beerOrder, BeerOrderEvent.BEERORDER_PICKED_UP);
+        });
+    }
+
     private StateMachine<BeerOrderStatus, BeerOrderEvent> build(BeerOrder beerOrder) {
         StateMachine<BeerOrderStatus, BeerOrderEvent> sm = smFactory.getStateMachine(beerOrder.getId());
         sm.stop();
