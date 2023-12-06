@@ -8,6 +8,7 @@ import guru.springframework.msscbeerorderservice.repositories.CustomerRepository
 import guru.springframework.msscbeerorderservice.web.mapper.BeerOrderMapper;
 import guru.springframework.brewery.model.BeerOrderDto;
 import guru.springframework.brewery.model.BeerOrderPagedList;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,16 +22,12 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class BeerOrderServiceImpl implements BeerOrderService {
     private final BeerOrderRepository beerOrderRepository;
     private final CustomerRepository customerRepository;
     private final BeerOrderMapper objectMapper;
-
-    public BeerOrderServiceImpl(BeerOrderRepository beerOrderRepository, CustomerRepository customerRepository, BeerOrderMapper objectMapper) {
-        this.beerOrderRepository = beerOrderRepository;
-        this.customerRepository = customerRepository;
-        this.objectMapper = objectMapper;
-    }
+    private final BeerOrderManager beerOrderManager;
 
     @Override
     public BeerOrderPagedList listOrders(UUID customerId, Pageable pageable) {
@@ -57,9 +54,8 @@ public class BeerOrderServiceImpl implements BeerOrderService {
 
         beerOrder.getBeerOrderLines().forEach(line -> line.setBeerOrder(beerOrder));
 
-        BeerOrder savedBeerOrder = beerOrderRepository.saveAndFlush(beerOrder);
+        BeerOrder savedBeerOrder = beerOrderManager.newBeerOrder(beerOrder);
         log.debug("Saved beer order: {}", savedBeerOrder);
-        //TODO: Publish event
         return objectMapper.beerOrderToDto(savedBeerOrder);
     }
 
@@ -72,7 +68,7 @@ public class BeerOrderServiceImpl implements BeerOrderService {
     public void pickOrder(UUID customerId, UUID orderId) {
         BeerOrder beerOrder = getOrder(customerId, orderId);
         beerOrder.setOrderStatus(BeerOrderStatus.PICKED_UP);
-        beerOrderRepository.save(beerOrder);
+        beerOrderManager.pickupOrder(orderId);
     }
 
     private BeerOrder getOrder(UUID customerId, UUID orderId) {

@@ -41,6 +41,9 @@ class BeerOrderServiceImplTest {
     @Mock
     private CustomerRepository customerRepository;
 
+    @Mock
+    private BeerOrderManager beerOrderManager;
+
     @Autowired
     private BeerOrderMapper mapper;
 
@@ -50,7 +53,7 @@ class BeerOrderServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        beerOrderService = new BeerOrderServiceImpl(repository, customerRepository, mapper);
+        beerOrderService = new BeerOrderServiceImpl(repository, customerRepository, mapper, beerOrderManager);
         customer = Customer.builder()
                 .customerName("Cevher")
                 .id(UUID.randomUUID())
@@ -86,7 +89,7 @@ class BeerOrderServiceImplTest {
 
         beerOrderService.placeOrders(customer.getId(), beerOrderDto);
 
-        verify(repository).saveAndFlush(ArgumentMatchers.any());
+        verify(beerOrderManager).newBeerOrder(ArgumentMatchers.any());
     }
 
     private BeerOrderDto createBeerOrder() {
@@ -123,8 +126,7 @@ class BeerOrderServiceImplTest {
 
         beerOrderService.pickOrder(customer.getId(), beerOrder.getId());
 
-        ArgumentCaptor<BeerOrder> captor = ArgumentCaptor.forClass(BeerOrder.class);
-        verify(repository).save(captor.capture());
-        assertThat(captor.getValue().getOrderStatus(), Matchers.equalTo(BeerOrderStatus.PICKED_UP));
+        ArgumentCaptor<UUID> captor = ArgumentCaptor.forClass(UUID.class);
+        verify(beerOrderManager).pickupOrder(captor.capture());
     }
 }
