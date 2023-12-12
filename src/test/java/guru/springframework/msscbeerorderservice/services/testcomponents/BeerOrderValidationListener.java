@@ -25,8 +25,11 @@ public class BeerOrderValidationListener {
     public void listen(Message message) {
         ValidateBeerOrderRequest request = (ValidateBeerOrderRequest) message.getPayload();
 
+        String customerRef = request.getBeerOrderDto().getCustomerRef();
+        boolean isValid = ! "invalid-customer".equals(customerRef);
+
         jmsTemplate.convertAndSend(JmsConfig.VALIDATE_ORDER_RESULT_QUEUE,
                 ValidateBeerOrderResult.builder().orderId(request.getBeerOrderDto().getId())
-                        .isValid(true).build());
+                        .isValid(isValid).build());
     }
 }

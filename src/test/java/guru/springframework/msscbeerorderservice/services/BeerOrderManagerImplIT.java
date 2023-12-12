@@ -59,13 +59,13 @@ public class BeerOrderManagerImplIT {
     private ObjectMapper objectMapper;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         testCustomer = customerRepository.save(Customer.builder()
                         .customerName("Test Customer").build());
     }
 
     @Test
-    void testNewToAllocated() throws JsonProcessingException, InterruptedException {
+    void testNewToAllocated() throws JsonProcessingException {
         newToAllocatedTest();
     }
 
@@ -99,6 +99,20 @@ public class BeerOrderManagerImplIT {
         beerOrderManager.pickupOrder(savedBeerOrder.getId());
         await().untilAsserted(() ->
                 assertEquals(BeerOrderStatus.PICKED_UP, beerOrderRepository.findById(savedBeerOrder.getId()).get().getOrderStatus())
+        );
+    }
+
+    @Test
+    void testInvalidOrder() throws JsonProcessingException {
+        BeerDto beerDto = BeerDto.builder().id(beerId).upc("12345").build();
+        wiremock.stubFor(get("/api/v1/beerUpc/").willReturn(okJson(objectMapper.writeValueAsString(beerDto))));
+        BeerOrder beerOrder = createBeerOrder();
+        beerOrder.setCustomerRef("invalid-customer");
+
+        BeerOrder savedBeerOrder = beerOrderManager.newBeerOrder(beerOrder);
+        assertNotNull(savedBeerOrder);
+        await().untilAsserted(() ->
+                assertEquals(BeerOrderStatus.VALIDATION_EXCEPTION, beerOrderRepository.findById(savedBeerOrder.getId()).get().getOrderStatus())
         );
     }
 
