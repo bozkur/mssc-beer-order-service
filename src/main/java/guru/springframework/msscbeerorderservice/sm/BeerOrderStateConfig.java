@@ -27,6 +27,7 @@ public class BeerOrderStateConfig extends StateMachineConfigurerAdapter<BeerOrde
     private final Action<BeerOrderStatus, BeerOrderEvent> allocateOrderAction;
     private final Action<BeerOrderStatus, BeerOrderEvent> invalidOrderAction;
     private final Action<BeerOrderStatus, BeerOrderEvent> allocationFailedAction;
+    private final Action<BeerOrderStatus, BeerOrderEvent> deallocateOrderAction;
 
 
     @Override
@@ -67,7 +68,6 @@ public class BeerOrderStateConfig extends StateMachineConfigurerAdapter<BeerOrde
                 .and()
                 .withExternal().source(BeerOrderStatus.ALLOCATED).target(BeerOrderStatus.PICKED_UP).event(BeerOrderEvent.BEERORDER_PICKED_UP)
                 .and()
-                .withExternal().source(BeerOrderStatus.ALLOCATED).target(BeerOrderStatus.CANCELLED).event(BeerOrderEvent.CANCEL_ORDER);
-                //TODO: Add deallocation action
+                .withExternal().source(BeerOrderStatus.ALLOCATED).target(BeerOrderStatus.CANCELLED).event(BeerOrderEvent.CANCEL_ORDER).action(deallocateOrderAction);
     }
 }
