@@ -49,9 +49,13 @@ public class BeerOrderStateConfig extends StateMachineConfigurerAdapter<BeerOrde
                 .and()
                 .withExternal().source(BeerOrderStatus.VALIDATION_PENDING).target(BeerOrderStatus.VALIDATED).event(BeerOrderEvent.VALIDATION_PASSED)
                 .and()
+                .withExternal().source(BeerOrderStatus.VALIDATION_PENDING).target(BeerOrderStatus.CANCELLED).event(BeerOrderEvent.CANCEL_ORDER)
+                .and()
                 .withExternal().source(BeerOrderStatus.VALIDATION_PENDING).target(BeerOrderStatus.VALIDATION_EXCEPTION).event(BeerOrderEvent.VALIDATION_FAILED).action(invalidOrderAction)
                 .and()
                 .withExternal().source(BeerOrderStatus.VALIDATED).target(BeerOrderStatus.ALLOCATION_PENDING).event(BeerOrderEvent.ALLOCATE_ORDER).action(allocateOrderAction)
+                .and()
+                .withExternal().source(BeerOrderStatus.VALIDATED).target(BeerOrderStatus.CANCELLED).event(BeerOrderEvent.CANCEL_ORDER)
                 .and()
                 .withExternal().source(BeerOrderStatus.ALLOCATION_PENDING).target(BeerOrderStatus.ALLOCATED).event(BeerOrderEvent.ALLOCATION_SUCCESS)
                 .and()
@@ -59,6 +63,11 @@ public class BeerOrderStateConfig extends StateMachineConfigurerAdapter<BeerOrde
                 .and()
                 .withExternal().source(BeerOrderStatus.ALLOCATION_PENDING).target(BeerOrderStatus.PENDING_INVENTORY).event(BeerOrderEvent.ALLOCATION_NO_INVENTORY)
                 .and()
-                .withExternal().source(BeerOrderStatus.ALLOCATED).target(BeerOrderStatus.PICKED_UP).event(BeerOrderEvent.BEERORDER_PICKED_UP);
+                .withExternal().source(BeerOrderStatus.ALLOCATION_PENDING).target(BeerOrderStatus.CANCELLED).event(BeerOrderEvent.CANCEL_ORDER)
+                .and()
+                .withExternal().source(BeerOrderStatus.ALLOCATED).target(BeerOrderStatus.PICKED_UP).event(BeerOrderEvent.BEERORDER_PICKED_UP)
+                .and()
+                .withExternal().source(BeerOrderStatus.ALLOCATED).target(BeerOrderStatus.CANCELLED).event(BeerOrderEvent.CANCEL_ORDER);
+                //TODO: Add deallocation action
     }
 }
