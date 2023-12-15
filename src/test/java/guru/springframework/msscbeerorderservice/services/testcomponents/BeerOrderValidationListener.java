@@ -26,6 +26,10 @@ public class BeerOrderValidationListener {
         ValidateBeerOrderRequest request = (ValidateBeerOrderRequest) message.getPayload();
 
         String customerRef = request.getBeerOrderDto().getCustomerRef();
+        if ("will-be-cancelled-validation".equals(customerRef)) {
+            return;
+        }
+
         boolean isValid = ! "invalid-customer".equals(customerRef);
 
         jmsTemplate.convertAndSend(JmsConfig.VALIDATE_ORDER_RESULT_QUEUE,

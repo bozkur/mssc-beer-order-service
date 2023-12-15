@@ -106,6 +106,14 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
         });
     }
 
+    @Override
+    public void cancelOrder(UUID orderId) {
+        Optional<BeerOrder> found = beerOrderRepository.findById(orderId);
+        found.ifPresent(beerOrder -> {
+            sendBeerOrderEvent(beerOrder, BeerOrderEvent.CANCEL_ORDER);
+        });
+    }
+
     private StateMachine<BeerOrderStatus, BeerOrderEvent> build(BeerOrder beerOrder) {
         StateMachine<BeerOrderStatus, BeerOrderEvent> sm = smFactory.getStateMachine(beerOrder.getId());
         sm.stop();

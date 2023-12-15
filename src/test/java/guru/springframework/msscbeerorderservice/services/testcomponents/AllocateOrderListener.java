@@ -26,6 +26,9 @@ public class AllocateOrderListener {
     public void listen(Message message) {
         AllocateBeerOrderRequest request = (AllocateBeerOrderRequest) message.getPayload();
         String customerRef = request.getBeerOrderDto().getCustomerRef();
+        if ("will-be-cancelled-allocation".equals(customerRef)) {
+            return;
+        }
 
         AllocateBeerOrderResult.AllocateBeerOrderResultBuilder builder = AllocateBeerOrderResult.builder();
 
