@@ -7,6 +7,8 @@ import com.maciejwalkowiak.wiremock.spring.ConfigureWireMock;
 import com.maciejwalkowiak.wiremock.spring.EnableWireMock;
 import com.maciejwalkowiak.wiremock.spring.InjectWireMock;
 import guru.springframework.brewery.model.BeerDto;
+import guru.springframework.brewery.model.events.FailedAllocationRequest;
+import guru.springframework.msscbeerorderservice.config.JmsConfig;
 import guru.springframework.msscbeerorderservice.domain.BeerOrder;
 import guru.springframework.msscbeerorderservice.domain.BeerOrderLine;
 import guru.springframework.msscbeerorderservice.domain.BeerOrderStatus;
@@ -17,6 +19,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jms.core.JmsTemplate;
 
 import java.util.List;
 import java.util.UUID;
@@ -57,6 +60,8 @@ public class BeerOrderManagerImplIT {
     private WireMockServer wiremock;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private JmsTemplate jmsTemplate;
 
     @BeforeEach
     void setUp() {
@@ -128,6 +133,9 @@ public class BeerOrderManagerImplIT {
         await().untilAsserted(() ->
                 assertEquals(BeerOrderStatus.ALLOCATION_EXCEPTION, beerOrderRepository.findById(savedBeerOrder.getId()).get().getOrderStatus())
         );
+        FailedAllocationRequest request = (FailedAllocationRequest) jmsTemplate.receiveAndConvert(JmsConfig.FAILED_ALLOCATION_QUEUE);
+        assertNotNull(request);
+        assertEquals(beerOrder.getId().toString(), request.getOrderId());
     }
 
     @Test

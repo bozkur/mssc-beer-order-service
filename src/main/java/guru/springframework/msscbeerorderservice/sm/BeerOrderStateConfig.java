@@ -26,6 +26,8 @@ public class BeerOrderStateConfig extends StateMachineConfigurerAdapter<BeerOrde
     private final Action<BeerOrderStatus, BeerOrderEvent> validateOrderAction;
     private final Action<BeerOrderStatus, BeerOrderEvent> allocateOrderAction;
     private final Action<BeerOrderStatus, BeerOrderEvent> invalidOrderAction;
+    private final Action<BeerOrderStatus, BeerOrderEvent> allocationFailedAction;
+
 
     @Override
     public void configure(StateMachineStateConfigurer<BeerOrderStatus, BeerOrderEvent> states) throws Exception {
@@ -53,7 +55,7 @@ public class BeerOrderStateConfig extends StateMachineConfigurerAdapter<BeerOrde
                 .and()
                 .withExternal().source(BeerOrderStatus.ALLOCATION_PENDING).target(BeerOrderStatus.ALLOCATED).event(BeerOrderEvent.ALLOCATION_SUCCESS)
                 .and()
-                .withExternal().source(BeerOrderStatus.ALLOCATION_PENDING).target(BeerOrderStatus.ALLOCATION_EXCEPTION).event(BeerOrderEvent.ALLOCATION_FAILED)
+                .withExternal().source(BeerOrderStatus.ALLOCATION_PENDING).target(BeerOrderStatus.ALLOCATION_EXCEPTION).event(BeerOrderEvent.ALLOCATION_FAILED).action(allocationFailedAction)
                 .and()
                 .withExternal().source(BeerOrderStatus.ALLOCATION_PENDING).target(BeerOrderStatus.PENDING_INVENTORY).event(BeerOrderEvent.ALLOCATION_NO_INVENTORY)
                 .and()
