@@ -1,30 +1,33 @@
 package guru.springframework.msscbeerorderservice.web.mapper;
 
+import guru.springframework.brewery.model.BeerDto;
+import guru.springframework.brewery.model.BeerOrderDto;
+import guru.springframework.brewery.model.BeerOrderLineDto;
 import guru.springframework.msscbeerorderservice.domain.BeerOrder;
 import guru.springframework.msscbeerorderservice.domain.BeerOrderLine;
 import guru.springframework.msscbeerorderservice.domain.BeerOrderStatus;
-import guru.springframework.msscbeerorderservice.services.beer.BeerServiceController;
-import guru.springframework.brewery.model.BeerOrderDto;
-import guru.springframework.brewery.model.BeerOrderLineDto;
+import guru.springframework.msscbeerorderservice.services.beer.BeerService;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class BeerOrderMapperTest {
+
+    private final String upc = "12345";
 
     @Autowired
     private BeerOrderMapper mapper;
@@ -32,15 +35,13 @@ class BeerOrderMapperTest {
     @Autowired
     private DateMapper dateMapper;
 
-    @Value("${sfg.brewery.beer-service-host}")
-    private String beerServiceHost;
-    @BeforeEach
-    void setUp() {
-        Assumptions.assumeTrue(new BeerServiceController().beerServiceListening(beerServiceHost));
-    }
+    @MockBean
+    private BeerService beerService;
 
     @Test
     void shouldConvertDomainToDto() {
+        BeerDto beerDto = BeerDto.builder().id(UUID.randomUUID()).upc(upc).build();
+        when(beerService.getBeerByUpc(beerDto.getUpc())).thenReturn(Optional.of(beerDto));
         BeerOrderLine line1 = createDomainLine();
         BeerOrderLine line2 = createDomainLine();
 
@@ -69,7 +70,7 @@ class BeerOrderMapperTest {
     private BeerOrderLine createDomainLine() {
         return BeerOrderLine.builder()
                 .beerId(UUID.randomUUID())
-                .upc("12345")
+                .upc(upc)
                 .build();
     }
 

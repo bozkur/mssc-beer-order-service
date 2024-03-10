@@ -1,23 +1,24 @@
 package guru.springframework.msscbeerorderservice.web.mapper;
 
-import guru.springframework.msscbeerorderservice.domain.BeerOrderLine;
-import guru.springframework.msscbeerorderservice.services.beer.BeerServiceController;
+import guru.springframework.brewery.model.BeerDto;
 import guru.springframework.brewery.model.BeerOrderLineDto;
+import guru.springframework.msscbeerorderservice.domain.BeerOrderLine;
+import guru.springframework.msscbeerorderservice.services.beer.BeerService;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 class BeerOrderLineMapperTest {
@@ -28,12 +29,8 @@ class BeerOrderLineMapperTest {
     @Autowired
     private DateMapper dateMapper;
 
-    @Value("${sfg.brewery.beer-service-host}")
-    private String beerServiceHost;
-    @BeforeEach
-    void setUp() {
-        Assumptions.assumeTrue(new BeerServiceController().beerServiceListening(beerServiceHost));
-    }
+    @MockBean
+    private BeerService beerService;
 
     @Test
     @DisplayName("Convert dto to domain object")
@@ -60,10 +57,13 @@ class BeerOrderLineMapperTest {
     @Test
     @DisplayName("Convert domain object to dto")
     void shouldConvertDomainToDto() {
+        UUID beerUuid = UUID.randomUUID();
+        BeerDto efes = BeerDto.builder().id(beerUuid).beerName("Efes").build();
+        when(beerService.getBeerByUpc(efes.getUpc())).thenReturn(Optional.of(efes));
         BeerOrderLine domain = new BeerOrderLine();
         domain.setId(UUID.randomUUID());
-        domain.setUpc("1234");
-        domain.setBeerId(UUID.randomUUID());
+        domain.setUpc(efes.getUpc());
+        domain.setBeerId(efes.getId());
         domain.setVersion(1L);
         domain.setCreatedDate(Timestamp.from(Instant.now()));
         domain.setOrderQuantity(10);
