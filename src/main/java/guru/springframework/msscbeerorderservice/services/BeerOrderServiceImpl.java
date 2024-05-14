@@ -1,17 +1,16 @@
 package guru.springframework.msscbeerorderservice.services;
 
+import guru.springframework.brewery.model.BeerOrderDto;
+import guru.springframework.brewery.model.BeerOrderPagedList;
 import guru.springframework.msscbeerorderservice.domain.BeerOrder;
-import guru.springframework.msscbeerorderservice.domain.Customer;
 import guru.springframework.msscbeerorderservice.domain.BeerOrderStatus;
+import guru.springframework.msscbeerorderservice.domain.Customer;
 import guru.springframework.msscbeerorderservice.repositories.BeerOrderRepository;
 import guru.springframework.msscbeerorderservice.repositories.CustomerRepository;
 import guru.springframework.msscbeerorderservice.web.mapper.BeerOrderMapper;
-import guru.springframework.brewery.model.BeerOrderDto;
-import guru.springframework.brewery.model.BeerOrderPagedList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -37,8 +36,7 @@ public class BeerOrderServiceImpl implements BeerOrderService {
         }
         Page<BeerOrder> beerOrderPage = beerOrderRepository.findAllByCustomer(customer.get(), pageable);
         List<BeerOrderDto> listOfBeerOrders = beerOrderPage.stream().map(objectMapper::beerOrderToDto).collect(Collectors.toList());
-        PageRequest pageRequest = PageRequest.of(beerOrderPage.getPageable().getPageNumber(), beerOrderPage.getPageable().getPageSize());
-        return new BeerOrderPagedList(listOfBeerOrders, pageRequest, beerOrderPage.getTotalElements());
+        return new BeerOrderPagedList(listOfBeerOrders, beerOrderPage.getPageable().getPageNumber(), beerOrderPage.getPageable().getPageSize(), beerOrderPage.getTotalElements());
     }
 
     @Override

@@ -7,7 +7,6 @@ import guru.springframework.msscbeerorderservice.repositories.CustomerRepository
 import guru.springframework.msscbeerorderservice.web.mapper.CustomerMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,6 @@ public class CustomerServiceImpl implements CustomerService{
     public CustomerPagedList listCustomers(Pageable pageable) {
         Page<Customer> customerPage = customerRepository.findAll(pageable);
         List<CustomerDto> dtoList = customerPage.stream().map(customerMapper::customerToDto).collect(Collectors.toList());
-        PageRequest pageRequest = PageRequest.of(customerPage.getPageable().getPageNumber(), customerPage.getPageable().getPageSize());
-        return new CustomerPagedList(dtoList, pageRequest, customerPage.getTotalElements());
+        return new CustomerPagedList(dtoList, customerPage.getPageable().getPageNumber(), customerPage.getPageable().getPageSize(), customerPage.getTotalElements());
     }
 }
